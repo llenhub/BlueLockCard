@@ -1,0 +1,18 @@
+{
+    "239033440857489410": [
+        {
+            "serial_number": "ICHI-CM-ISYO-1",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 39,
+                "Speed": 35,
+                "Defense": 32,
+                "Pass": 46,
+                "Dribble": 50,
+                "Shoot": 46
+            }
+        }
+    ]
+}

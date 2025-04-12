@@ -1,62 +1,75 @@
-from typing import Final
 import os
 from dotenv import load_dotenv
-from discord import Intents, Client, Message
-from responses import get_response
+import discord
+from discord import app_commands
+from responses import generate_card, add_card_to_collection  # Dynamic card generator and collection storage
+from imgen import generate_card_image  # Function to generate the card image (assumed to be implemented)
 
-# STEP 0: LOAD OUR TOKEN FROM SOMEWHERE SAFE
 load_dotenv()
-TOKEN: Final[str] = os.getenv('DISCORD_TOKEN')
+TOKEN = os.getenv("DISCORD_TOKEN")
+# Optionally restrict drops to a specific user:
+MY_USER_ID = 239033440857489410
 
-# STEP 1: BOT SETUP
-intents: Intents = Intents.default()
-intents.message_content = True  # NOQA
-client: Client = Client(intents=intents)
+intents = discord.Intents.default()
+client = discord.Client(intents=intents)
+tree = app_commands.CommandTree(client)
 
+class ClaimView(discord.ui.View):
+    def __init__(self, card, user_id, image_path):
+        super().__init__(timeout=60)  # View will timeout after 60 seconds
+        self.card = card
+        self.user_id = user_id
+        self.image_path = image_path
+        self.claimed = False
 
-# STEP 2: MESSAGE FUNCTIONALITY
-async def send_message(message: Message, user_message: str) -> None:
-    if not user_message:
-        print('(Message was empty because intents were not enabled probably)')
+    @discord.ui.button(label="Claim Card", style=discord.ButtonStyle.green)
+    async def claim_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        # Only allow the same user who dropped the card to claim it.
+        if interaction.user.id != self.user_id:
+            await interaction.response.send_message("This card drop is not for you!", ephemeral=True)
+            return
+        # If already claimed, don't do it again.
+        if self.claimed:
+            await interaction.response.send_message("You have already claimed this card.", ephemeral=True)
+            return
+
+        # Store the card in the user’s collection.
+        add_card_to_collection(self.user_id, self.card)
+        self.claimed = True
+        button.disabled = True
+        # Update the original message to indicate the card is claimed.
+        await interaction.response.edit_message(content="Card claimed successfully!", view=self)
+
+@tree.command(name="drop", description="Drop a Blue Lock card; click the button to claim it.")
+async def drop(interaction: discord.Interaction):
+    if interaction.user.id != MY_USER_ID:
+        await interaction.response.send_message("You are not authorized to drop a card.", ephemeral=True)
         return
 
-    if is_private := user_message[0] == '?':
-        user_message = user_message[1:]
+    card = generate_card()
+    image_stream = generate_card_image(card)  # Assumed to return a BytesIO stream for the image
+    
+    embed = discord.Embed(
+        title="Card Drop!",
+        description="A new card has been dropped! Click the **Claim Card** button to add it to your collection."
+    )
+    if image_stream:
+        embed.set_image(url="attachment://" + image_stream.name)
+    
+    view = ClaimView(card, interaction.user.id, image_stream)
+    
+    if image_stream:
+        await interaction.response.send_message(embed=embed, view=view, file=discord.File(image_stream))
+    else:
+        await interaction.response.send_message(f"You dropped a card, but image generation failed.\n{card}", view=view)
 
+@client.event
+async def on_ready():
     try:
-        response: str = get_response(user_message)
-        await message.author.send(response) if is_private else await message.channel.send(response)
+        synced = await tree.sync()  # Sync slash commands with Discord.
+        print(f"Synced {len(synced)} command(s)")
     except Exception as e:
-        print(e)
+        print(f"Failed to sync commands: {e}")
+    print(f"Logged in as {client.user}")
 
-
-# STEP 3: HANDLING THE STARTUP FOR OUR BOT
-@client.event
-async def on_ready() -> None:
-    print(f'{client.user} is now running!')
-
-
-# STEP 4: HANDLING INCOMING MESSAGES
-@client.event
-async def on_message(message: Message) -> None:
-    if message.author == client.user:
-        return
-
-    username: str = str(message.author)
-    user_message: str = message.content
-    channel: str = str(message.channel)
-
-    print(f'[{channel}] {username}: "{user_message}"')
-    await send_message(message, user_message)
-
-
-# STEP 5: MAIN ENTRY POINT
-def main() -> None:
-    client.run(token=TOKEN)
-
-
-if __name__ == '__main__':
-    main()
-
-
-
+client.run(TOKEN)
