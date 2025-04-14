@@ -11,16 +11,27 @@ def get_background_path(rarity: str) -> str:
     rarity = rarity.lower()
     mapping = {
         "common": "common.png",
+        "uncommon": "uncommon.png",
         "rare": "rare.png",
         "epic": "epic.png",
-        "legendary": "legendary.png"
+        "ultra rare": "ultrarare.png",
+        "legendary": "legendary.png",
+        "mythic": "mythic.png"
     }
     file_name = mapping.get(rarity, "common.png")
     return os.path.join(BACKGROUND_DIR, file_name)
 
-def get_character_image_path(card_set: str, name: str) -> str:
-    file_name = f"{name}.png"
-    return os.path.join(CHARACTER_DIR, card_set, file_name)
+from card_database import get_set_code, get_char_code
+
+def get_character_image_path(card_set: str, name: str, variant: str = None) -> str:
+    set_code = get_set_code(card_set)
+    # If a variant is provided in the card, use it.
+    if variant:
+        char_code = variant
+    else:
+        char_code = get_char_code(name)
+    file_name = f"{char_code}.png"
+    return os.path.join(CHARACTER_DIR, set_code, file_name)
 
 def generate_card_image(card) -> io.BytesIO:
     """
@@ -43,7 +54,8 @@ def generate_card_image(card) -> io.BytesIO:
     bg_width, bg_height = background.size
 
     # Load the character image.
-    char_path = get_character_image_path(card.card_set, card.name)
+    variant = getattr(card, "variant", None)  # works if card is an object/dict that includes variant
+    char_path = get_character_image_path(card.card_set, card.name, variant)
     try:
         character = Image.open(char_path).convert("RGBA")
     except FileNotFoundError:
@@ -58,7 +70,7 @@ def generate_card_image(card) -> io.BytesIO:
 
     # Prepare to draw text.
     draw = ImageDraw.Draw(background)
-    stroke_width = 2
+    stroke_width = 4
     stroke_fill = (0, 0, 0)  # Black outline
 
     # Font for stat text (larger size).
@@ -91,12 +103,12 @@ def generate_card_image(card) -> io.BytesIO:
 
     # Define stat positions.
     positions = {
-        "Offense": (200, 420),
+        "Offense": (200, 400),
         "Speed": (200, 480),
-        "Defense": (200, 540),
-        "Pass": (200, 600),
-        "Dribble": (200, 660),
-        "Shoot": (200, 720)
+        "Defense": (200, 560),
+        "Pass": (200, 640),
+        "Dribble": (200, 720),
+        "Shoot": (200, 800)
     }
 
     # Draw each stat using its designated position with a text stroke.

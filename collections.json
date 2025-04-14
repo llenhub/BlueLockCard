@@ -1,17 +1,229 @@
 {
-    "239033440857489410": [
+    "629000337742757947": [
         {
-            "serial_number": "ICHI-CM-ISYO-1",
+            "serial_number": "ICHI-CM-ISYO3-15",
             "name": "Isagi Yoichi",
             "set": "Ichinan High",
             "rarity": "Common",
             "stats": {
-                "Offense": 39,
+                "Offense": 32,
+                "Speed": 40,
+                "Defense": 50,
+                "Pass": 58,
+                "Dribble": 36,
+                "Shoot": 42
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KOPO-2",
+            "name": "Kocchi Ponkotsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 26,
+                "Speed": 41,
+                "Defense": 44,
+                "Pass": 39,
+                "Dribble": 30,
+                "Shoot": 33
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-16",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 47,
                 "Speed": 35,
-                "Defense": 32,
-                "Pass": 46,
-                "Dribble": 50,
-                "Shoot": 46
+                "Defense": 43,
+                "Pass": 34,
+                "Dribble": 47,
+                "Shoot": 40
+            }
+        },
+        {
+            "serial_number": "MTKZ-UC-KIRY2-1",
+            "name": "Kira Ryosuke",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Uncommon",
+            "stats": {
+                "Offense": 49,
+                "Speed": 60,
+                "Defense": 35,
+                "Pass": 54,
+                "Dribble": 38,
+                "Shoot": 78
+            }
+        }
+    ],
+    "239033440857489410": [
+        {
+            "serial_number": "MTKZ-CM-KOPO-1",
+            "name": "Kocchi Ponkotsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 36,
+                "Speed": 45,
+                "Defense": 30,
+                "Pass": 36,
+                "Dribble": 32,
+                "Shoot": 30
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KAMA-1",
+            "name": "Kazeyama Matsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 30,
+                "Speed": 29,
+                "Defense": 42,
+                "Pass": 25,
+                "Dribble": 35,
+                "Shoot": 45
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-1",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 32,
+                "Speed": 31,
+                "Defense": 33,
+                "Pass": 30,
+                "Dribble": 48,
+                "Shoot": 50
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KOPO-3",
+            "name": "Kocchi Ponkotsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 36,
+                "Speed": 36,
+                "Defense": 28,
+                "Pass": 40,
+                "Dribble": 28,
+                "Shoot": 37
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KOPO-4",
+            "name": "Kocchi Ponkotsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 26,
+                "Speed": 37,
+                "Defense": 33,
+                "Pass": 28,
+                "Dribble": 28,
+                "Shoot": 36
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KOPO-5",
+            "name": "Kocchi Ponkotsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 32,
+                "Speed": 43,
+                "Defense": 34,
+                "Pass": 34,
+                "Dribble": 35,
+                "Shoot": 36
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-2",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 50,
+                "Speed": 45,
+                "Defense": 37,
+                "Pass": 30,
+                "Dribble": 49,
+                "Shoot": 34
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-3",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 41,
+                "Speed": 41,
+                "Defense": 45,
+                "Pass": 42,
+                "Dribble": 31,
+                "Shoot": 32
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-4",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 35,
+                "Speed": 49,
+                "Defense": 49,
+                "Pass": 34,
+                "Dribble": 43,
+                "Shoot": 38
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-5",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 44,
+                "Speed": 49,
+                "Defense": 39,
+                "Pass": 53,
+                "Dribble": 42,
+                "Shoot": 49
+            }
+        },
+        {
+            "serial_number": "ICHI-CM-ISYO3-6",
+            "name": "Isagi Yoichi",
+            "set": "Ichinan High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 41,
+                "Speed": 43,
+                "Defense": 46,
+                "Pass": 48,
+                "Dribble": 39,
+                "Shoot": 47
+            }
+        },
+        {
+            "serial_number": "MTKZ-CM-KAMA-2",
+            "name": "Kazeyama Matsu",
+            "set": "Matsukaze Kokuo High",
+            "rarity": "Common",
+            "stats": {
+                "Offense": 28,
+                "Speed": 31,
+                "Defense": 39,
+                "Pass": 42,
+                "Dribble": 25,
+                "Shoot": 36
             }
         }
     ]

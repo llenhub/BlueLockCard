@@ -1,75 +1,39 @@
 import os
 from dotenv import load_dotenv
 import discord
-from discord import app_commands
-from responses import generate_card, add_card_to_collection  # Dynamic card generator and collection storage
-from imgen import generate_card_image  # Function to generate the card image (assumed to be implemented)
+from discord.ext import commands
 
+# Load environment variables and get the token from .env file.
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
-# Optionally restrict drops to a specific user:
-MY_USER_ID = 239033440857489410
 
+# Set up bot intents and the command prefix.
 intents = discord.Intents.default()
-client = discord.Client(intents=intents)
-tree = app_commands.CommandTree(client)
+intents.message_content = True
 
-class ClaimView(discord.ui.View):
-    def __init__(self, card, user_id, image_path):
-        super().__init__(timeout=60)  # View will timeout after 60 seconds
-        self.card = card
-        self.user_id = user_id
-        self.image_path = image_path
-        self.claimed = False
+class MyBot(commands.Bot):
+    async def setup_hook(self):
+        # Load cog extensions asynchronously.
+        extensions = ['cogs.drop', 'cogs.list', 'cogs.show']
+        for ext in extensions:
+            try:
+                await self.load_extension(ext)
+                print(f"Loaded extension: {ext}")
+            except Exception as e:
+                print(f"Failed to load extension {ext}: {e}")
+        # Sync slash commands.
+        try:
+            await self.tree.sync()
+            print("Slash commands synchronized!")
+        except Exception as e:
+            print(f"Failed to sync slash commands: {e}")
 
-    @discord.ui.button(label="Claim Card", style=discord.ButtonStyle.green)
-    async def claim_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        # Only allow the same user who dropped the card to claim it.
-        if interaction.user.id != self.user_id:
-            await interaction.response.send_message("This card drop is not for you!", ephemeral=True)
-            return
-        # If already claimed, don't do it again.
-        if self.claimed:
-            await interaction.response.send_message("You have already claimed this card.", ephemeral=True)
-            return
+# Initialize the bot using our custom subclass.
+bot = MyBot(command_prefix="^", intents=intents)
 
-        # Store the card in the user’s collection.
-        add_card_to_collection(self.user_id, self.card)
-        self.claimed = True
-        button.disabled = True
-        # Update the original message to indicate the card is claimed.
-        await interaction.response.edit_message(content="Card claimed successfully!", view=self)
-
-@tree.command(name="drop", description="Drop a Blue Lock card; click the button to claim it.")
-async def drop(interaction: discord.Interaction):
-    if interaction.user.id != MY_USER_ID:
-        await interaction.response.send_message("You are not authorized to drop a card.", ephemeral=True)
-        return
-
-    card = generate_card()
-    image_stream = generate_card_image(card)  # Assumed to return a BytesIO stream for the image
-    
-    embed = discord.Embed(
-        title="Card Drop!",
-        description="A new card has been dropped! Click the **Claim Card** button to add it to your collection."
-    )
-    if image_stream:
-        embed.set_image(url="attachment://" + image_stream.name)
-    
-    view = ClaimView(card, interaction.user.id, image_stream)
-    
-    if image_stream:
-        await interaction.response.send_message(embed=embed, view=view, file=discord.File(image_stream))
-    else:
-        await interaction.response.send_message(f"You dropped a card, but image generation failed.\n{card}", view=view)
-
-@client.event
+@bot.event
 async def on_ready():
-    try:
-        synced = await tree.sync()  # Sync slash commands with Discord.
-        print(f"Synced {len(synced)} command(s)")
-    except Exception as e:
-        print(f"Failed to sync commands: {e}")
-    print(f"Logged in as {client.user}")
+    print(f"Logged in as {bot.user}")
 
-client.run(TOKEN)
+# Run the bot.
+bot.run(TOKEN)
